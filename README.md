@@ -188,7 +188,7 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         1. Administrar Jenkins  Plugins  Available plugins  Buscar Git
     2. Creamos una nueva tarea y seleccionamos “Pipeline” e indicamos un nombre para la tarea:
        ![Prueba Jenkins 1](Jenkins1.png)
-    3. En la opción de Pipeline seleccionamos Git, introducimos la url del repositorio de GitHub y seleccionamos Add en la parte de Credentials para añadir las credenciales de GitHub
-       ![Prueba Jenkins 2](Jenkins2.png)
-       ![Prueba Jenkins 3](Jenkins3.png)
+    3. En la opción de Pipeline seleccionamos Git, introducimos la url del repositorio de GitHub y seleccionamos Add en la parte de Credentials para añadir las credenciales de GitHub  
+       ![Prueba Jenkins 2](Jenkins2.png)  
+       ![Prueba Jenkins 3](Jenkins3.png)  
 
