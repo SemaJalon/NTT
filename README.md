@@ -18,7 +18,6 @@
      ```bash
          sudo apt update
      ```
-     
     2. Instalar curl (comando para obtener el codigo fuente de una web):
      ```bash
          sudo apt install curl
@@ -28,6 +27,8 @@
          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
      ```
+     `-fsSl`:
+     `gpg`: 
     4. Actualizar los paquetes:
      ```bash
          sudo apt update
@@ -53,7 +54,7 @@
      ```bash
         sudo usermod -aG docker $USER
      ```
-2. Crear contenedor del proyecto HelloWorld
+3. Crear contenedor del proyecto HelloWorld
     1. Crear Dockerfile en el directorio del proyecto (HelloWorld)
     2. Crear imagen del proyecto:
      ```bash
@@ -65,7 +66,7 @@
      ```
     4. Acceder al contenedor mediante el navegador:
         http://localhost:7000
-3.	Realizar pruebas unitarias para el proyecto:
+4.	Realizar pruebas unitarias para el proyecto:
     1.	Instalar coverage de python3 dentro del contenedor del proyecto
     ```bash
       docker exec -it <nombre_contenedor> sh
@@ -90,7 +91,7 @@
     ```bash
        coverage xml
     ```
-4. Realizar pruebas unitarias en SonarQube
+5. Realizar pruebas unitarias en SonarQube
     1.	Instalar SonarQube en un contenedor de Docker
     ```bash
         docker run --name sonarqube -p 9001:9000 sonarqube
@@ -110,7 +111,7 @@
     ```bash
         pip3 install pysonar-scanner
     ```
-    7.	A continuación, vamos a conectar el proyecto a SonarQube
+    6.	A continuación, vamos a conectar el proyecto a SonarQube
     ```bash
         pysonar -Dsonar.host.url=http://localhost:9001 \
         -Dsonar.sources=src \
@@ -125,3 +126,65 @@
     `-Dsonar.token`: Token que hemos creado en SonarQube para que `pysonar` pueda acceder al directorio y pueda realizar los tests
    
 Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pruebas unitarias realizadas con PySonar:
+![Prueba SonarQube 1](Sonarqube1.png)
+
+## Practica Python con Jenkins y SonarQube
+#### Subir proyecto a repositorio de GitHub
+1.	Instalamos y configuracion git en WSL:
+    ```bash
+      sudo apt install git -y
+    ```
+    1.	Configurar el nombre de usuario y correo del repositorio
+    ```bash
+      git config --global user.name "SemaJalon"
+      git config --global user.email "j.jalon.guerrero@iescristobaldemonroy.es"
+    ```
+    2.	Crear repositorio en Github
+      1.	Ir a GitHub.
+      2.	Crear nuevo “New”
+      3.	Ponerle un nombre al proyecto y elegir que sea público o privado
+
+    3.	Subir proyecto al repositorio creado en Github
+      1.	Ir al directorio local del proyecto
+    ```bash
+      cd helloworld
+    ```
+      2.	Inicializar Git:
+    ```bash
+      git init
+    ```
+      3.	Agregar los archivos:
+    ```bash
+      git add .
+    ```
+      4.	Realizar el primer commit
+    ```bash
+      git commit -m “subida de proyecto”
+    ```
+      5.	Conectar el repositorio local con el de GitHub
+    ```bash
+        git remote add origin https://github.com/SemaJalon/HelloWorld.git
+    ```
+      6.	Nos pediran el nombre de usuario y un token para confirmar la subida
+        1.	Obtener token:
+            1.	Ire a GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token.
+            2.	Elegir Expiration según prefiramos (yo he puesto 30 days).
+            3.	Seleccionar los scopes:
+                repo (para repositorios completos)
+            4.	Hacer clic en Generate token y nos generara el token necesario
+        2.	Guardar el token en el pc local para no tener que volver a insertarlo:
+    ```bash
+        git config ––global credential.helper store
+    ```
+      7.	Subir los archivos al repositorio de GitHub:
+    ```bash
+        git Branch -M main
+        git push -u origin main
+    ```
+#### Análisis de SonarQube con un pipeline de Jenkins
+1. En el directorio raíz del proyecto de GitHub creamos un archivo Jenkinsfile para configurar el pipeline y los comandos necesarios para realizar las pruebas mediante pysonar. (En caso de necesitar el archivo Jenkinsfile, póngase en contacto con el autor del documento).
+2. Conectar Jenkins con el repositorio de GitHub:
+    1. Instalar plugin de GitHub:
+        1. Administrar Jenkins  Plugins  Available plugins  Buscar Git
+    2. Creamos una nueva tarea y seleccionamos “Pipeline” e indicamos un nombre para la tarea:
+
