@@ -167,11 +167,11 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         ```
         6.	Nos pediran el nombre de usuario y un token para confirmar la subida
           1.	Obtener token:
-              1.	Ire a GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token.
-              2.	Elegir Expiration según prefiramos (yo he puesto 30 days).
-              3.	Seleccionar los scopes:
-                  repo (para repositorios completos)
-              4.	Hacer clic en Generate token y nos generara el token necesario
+              Ire a GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token.  
+              Elegir Expiration según prefiramos (yo he puesto 30 days).  
+              Seleccionar los scopes:  
+                  repo (para repositorios completos)  
+              Hacer clic en Generate token y nos generara el token necesario  
           2.	Guardar el token en el pc local para no tener que volver a insertarlo:
         ```bash
             git config ––global credential.helper store
@@ -187,4 +187,5 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
     1. Instalar plugin de GitHub:
         1. Administrar Jenkins  Plugins  Available plugins  Buscar Git
     2. Creamos una nueva tarea y seleccionamos “Pipeline” e indicamos un nombre para la tarea:
+       
 
