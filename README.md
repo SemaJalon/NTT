@@ -78,7 +78,7 @@
     ```
     4.	Informar las estadísticas de las pruebas (mejorando el código hasta llegar al 100%):
     ```bash
-      # coverage report
+      $ coverage report
       Name            Stmts    Miss    Cover
       ---------------------------------------
       src/app.py          6       0     100%
@@ -90,4 +90,38 @@
     ```bash
        coverage xml
     ```
-4. 
+4. Realizar pruebas unitarias en SonarQube
+    1.	Instalar SonarQube en un contenedor de Docker
+    ```bash
+        docker run --name sonarqube -p 9001:9000 sonarqube
+    ```
+    2.	Acceder a SonarQube desde el navegador:
+        http://localhost:9001
+    3.	Accedemos a la consola para instalar python3 y pip3
+    ```bash
+        sudo apt install -y python3 python3-pip
+    ```
+    4.	Instalamos y activar en el entorno virtual
+    ```bash
+        python3  -m  venv venv
+        source venv/bin/activate
+    ```
+    5.	Instalamos pysonar-scanner
+    ```bash
+        pip3 install pysonar-scanner
+    ```
+    7.	A continuación, vamos a conectar el proyecto a SonarQube
+    ```bash
+        pysonar -Dsonar.host.url=http://localhost:9001 \
+        -Dsonar.sources=src \
+        -Dsonar.python.coverage.reportPaths=coverage.xml \
+        -Dsonar.projectKey=HelloWorld \
+        -Dsonar.token=sqp_42be3b0fa7dd669b1fd8e33a51fbc71fa2526fa2
+   ```
+    `-Dsonar.host.url`: Url y puerto donde se encuentra alojado SonarQube  
+    `-Dsonar.source`: Directorio donde se encuentran los archivos del proyecto  
+    `-Dsonar.python.coverage.reportPaths`: Nombre del archivo de coverage que hemos realizado anteriormente  
+    `-Dsonar.proyectKey`: Nombre de referencia del proyecto que se creara en SonarQube para los tests unitarios  
+    `-Dsonar.token`: Token que hemos creado en SonarQube para que `pysonar` pueda acceder al directorio y pueda realizar los tests
+   
+Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pruebas unitarias realizadas con PySonar:
