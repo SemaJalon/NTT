@@ -140,47 +140,47 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
       git config --global user.email "j.jalon.guerrero@iescristobaldemonroy.es"
     ```
     2.	Crear repositorio en Github
-      1.	Ir a GitHub.
-      2.	Crear nuevo “New”
-      3.	Ponerle un nombre al proyecto y elegir que sea público o privado
+        1.	Ir a GitHub.
+        2.	Crear nuevo “New”
+        3.	Ponerle un nombre al proyecto y elegir que sea público o privado
 
     3.	Subir proyecto al repositorio creado en Github
-      1.	Ir al directorio local del proyecto
-    ```bash
-      cd helloworld
-    ```
-      2.	Inicializar Git:
-    ```bash
-      git init
-    ```
-      3.	Agregar los archivos:
-    ```bash
-      git add .
-    ```
-      4.	Realizar el primer commit
-    ```bash
-      git commit -m “subida de proyecto”
-    ```
-      5.	Conectar el repositorio local con el de GitHub
-    ```bash
-        git remote add origin https://github.com/SemaJalon/HelloWorld.git
-    ```
-      6.	Nos pediran el nombre de usuario y un token para confirmar la subida
-        1.	Obtener token:
-            1.	Ire a GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token.
-            2.	Elegir Expiration según prefiramos (yo he puesto 30 days).
-            3.	Seleccionar los scopes:
-                repo (para repositorios completos)
-            4.	Hacer clic en Generate token y nos generara el token necesario
-        2.	Guardar el token en el pc local para no tener que volver a insertarlo:
-    ```bash
-        git config ––global credential.helper store
-    ```
-      7.	Subir los archivos al repositorio de GitHub:
-    ```bash
-        git Branch -M main
-        git push -u origin main
-    ```
+        1.	Ir al directorio local del proyecto
+        ```bash
+          cd helloworld
+        ```
+        2.	Inicializar Git:
+        ```bash
+          git init
+        ```
+        3.	Agregar los archivos:
+        ```bash
+          git add .
+        ```
+        4.	Realizar el primer commit
+        ```bash
+          git commit -m “subida de proyecto”
+        ```
+        5.	Conectar el repositorio local con el de GitHub
+        ```bash
+            git remote add origin https://github.com/SemaJalon/HelloWorld.git
+        ```
+        6.	Nos pediran el nombre de usuario y un token para confirmar la subida
+          1.	Obtener token:
+              1.	Ire a GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token.
+              2.	Elegir Expiration según prefiramos (yo he puesto 30 days).
+              3.	Seleccionar los scopes:
+                  repo (para repositorios completos)
+              4.	Hacer clic en Generate token y nos generara el token necesario
+          2.	Guardar el token en el pc local para no tener que volver a insertarlo:
+        ```bash
+            git config ––global credential.helper store
+        ```
+        7.	Subir los archivos al repositorio de GitHub:
+        ```bash
+            git Branch -M main
+            git push -u origin main
+        ```
 #### Análisis de SonarQube con un pipeline de Jenkins
 1. En el directorio raíz del proyecto de GitHub creamos un archivo Jenkinsfile para configurar el pipeline y los comandos necesarios para realizar las pruebas mediante pysonar. (En caso de necesitar el archivo Jenkinsfile, póngase en contacto con el autor del documento).
 2. Conectar Jenkins con el repositorio de GitHub:
