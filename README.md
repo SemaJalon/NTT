@@ -185,10 +185,19 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
 1. En el directorio raíz del proyecto de GitHub creamos un archivo Jenkinsfile para configurar el pipeline y los comandos necesarios para realizar las pruebas mediante pysonar. (En caso de necesitar el archivo Jenkinsfile, póngase en contacto con el autor del documento).
 2. Conectar Jenkins con el repositorio de GitHub:
     1. Instalar plugin de GitHub:
-        1. Administrar Jenkins  Plugins  Available plugins  Buscar Git
+        1. Administrar Jenkins -> Plugins -> Available plugins -> Buscar Git
     2. Creamos una nueva tarea y seleccionamos “Pipeline” e indicamos un nombre para la tarea:
        ![Prueba Jenkins 1](Jenkins1.png)
     3. En la opción de Pipeline seleccionamos Git, introducimos la url del repositorio de GitHub y seleccionamos Add en la parte de Credentials para añadir las credenciales de GitHub  
        ![Prueba Jenkins 2](Jenkins2.png)  
-       ![Prueba Jenkins 3](Jenkins3.png)  
+       ![Prueba Jenkins 3](Jenkins3.png)
+3.	Conectar Jenkins con SonarQube
+    1.	Instalamos el plugin de SonarQube Scanner en Jenkins:
+        1.	Administrar Jenkins -> Plugins -> Availables plugins -> Buscamos SonarQube e instalamos SonarQube Scanner
+    2.	Configurar plugin SonarQube:
+        1.	Obtenemos un token de SonarQube:
+            1.	Administration  System  Users  Apartado de Administrator creamos el token para Jenkins. 
+            Copiamos el token que nos proporciona:
+      ![Token SonarQube](TokenSonarQube.png)
+
 
