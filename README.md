@@ -27,25 +27,29 @@
          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
      ```
-     `-fsSl`:
-     `gpg`: 
+     `curl`: Herramienta para transferir datos desde o hacia un servidor.  
+     `-fsSl`: Descarga un archivo de forma silenciosa, siguiendo redirecciones y si falla no muestra el error.  
+     `gpg`: Herramienta para cifrado y firmas digitales, en este caso verifica la autenticidad del repositorio.
+     `arch=$(dpkg --print-architecture)`: Detecta la arquitectura (amd64, arm64, etc.).
+     `signed-by=/usr/share/keyrings/docker-archive-keyring.gpg`: Usa la clave GPG descargada.
+     `$(lsb_release -cs)`: Detecta la versión de Ubuntu.   
     4. Actualizar los paquetes:
      ```bash
          sudo apt update
      ```
-    5. Instalar Docker Cli ():
+    5. Instalar Docker Cli (Motor de Docker, la herramienta para usar Docker desde la terminal y el runtime que ejecuta los contenedores.):
      ```bash
           sudo apt install docker-ce docker-ce-cli containerd.io
      ```
-    6. Instalar Docker Compose:
+    6. Instalar Docker Compose (Instala el plugin oficial de Docker Compose para la CLI de Docker):
      ```bash
         sudo apt install docker-compose-plugin
      ```
-    7. Ejecutar demon de Docker():
+    7. Ejecutar daemon de Docker (Ejecuta el daemon de docker en segundo plano):
      ```bash
         sudo dockerd &
      ```
-    8. Inicio automatico de Docker():
+    8. Inicio automatico de Docker (Asegura que Docker se inicie automáticamente cada vez que reinicies el sistema):
      ```bash
         sudo systemctl enable docker
         sudo systemctl start docker
@@ -60,6 +64,7 @@
      ```bash
         docker build -t helloworld .
      ```
+     Construye una imagen con nombre 'helloworld' y contruira la imagen con los archivos del directorio actual  
     3. Correr la imagen para crear un contenedor con la imagen creada:
      ```bash
         docker run -d -p 7000:4000 helloworld
