@@ -270,7 +270,7 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
               git push -u origin main
           ```
     2.	Creamos la pipeline en Jenkins y la conectamos con GitLab:
-        1.	Añadimos las nuevas credentials para esta conexión con el nombre de usuario (root) y la contraseña que hemos obtenido anteriormente.
+        1.	Añadimos las nuevas credentials para esta conexión con el nombre de usuario (root) y la contraseña que hemos obtenido anteriormente.  
             ![Credenciales Gitlab](CredentialsGitlab.png)  
             ![Credenciales Gitlab 2](CredentialsGitlab2.png)
     3.	En el archivo Jenkinsfile modificamos también las url y el nombre de credentialsId con el nombre que le hemos puesto a las credentials al crear la pipeline en Jenkins:
