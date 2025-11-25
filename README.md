@@ -61,10 +61,11 @@
 3. Crear contenedor del proyecto HelloWorld
     1. Crear Dockerfile en el directorio del proyecto (HelloWorld)
     2. Crear imagen del proyecto:
+       Construye una imagen con nombre 'helloworld' y contruira la imagen con los archivos del directorio actual.  
      ```bash
         docker build -t helloworld .
      ```
-     Construye una imagen con nombre 'helloworld' y contruira la imagen con los archivos del directorio actual.  
+     
     3. Correr la imagen para crear un contenedor con la imagen creada:
      ```bash
         docker run -d -p 7000:4000 helloworld
