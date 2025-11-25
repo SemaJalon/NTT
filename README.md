@@ -64,7 +64,7 @@
      ```bash
         docker build -t helloworld .
      ```
-     Construye una imagen con nombre 'helloworld' y contruira la imagen con los archivos del directorio actual  
+     Construye una imagen con nombre 'helloworld' y contruira la imagen con los archivos del directorio actual.  
     3. Correr la imagen para crear un contenedor con la imagen creada:
      ```bash
         docker run -d -p 7000:4000 helloworld
