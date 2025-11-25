@@ -201,8 +201,8 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
       ![Token SonarQube](TokenSonarQube.png)
             2.	En Jenkins nos vamos a Administrar Jenkins -> System y nos desplazamos hasta la sección “SonarQube servers” y la configuramos indicando el nombre del servidor que hemos indicado en el archivo Jenkinsfile la url del servidor y añadimos las credenciales
       ![Jenkins SonarQube](JenkinsSonarQube.png)
-                1.	Clicamos en “+Add” para añadir el token que hemos obtenido de SonarQube:
-                ![Credentials SonarQube](CredentialsSonarQube.png)  
+                1.	Clicamos en “+Add” para añadir el token que hemos obtenido de SonarQube:  
+                ![Credentials SonarQube](CredentialsSonarqube.png)  
   4.	Una vez conectado Jenkins con GitHub para obtener el repositorio y Jenkins con SonarQube, accedemos al pipeline que hemos creado y clicamos en “Construir ahora”
      ![Construir Jenkins](JenkinsConstruir.png)  
   5.	Por último, esperamos a que termine el análisis y veremos que se ha analizado con SonarQube.
