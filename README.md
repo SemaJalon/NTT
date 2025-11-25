@@ -32,7 +32,8 @@
      `gpg`: Herramienta para cifrado y firmas digitales, en este caso verifica la autenticidad del repositorio.  
      `arch=$(dpkg --print-architecture)`: Detecta la arquitectura (amd64, arm64, etc.).  
      `signed-by=/usr/share/keyrings/docker-archive-keyring.gpg`: Usa la clave GPG descargada.  
-     `$(lsb_release -cs)`: Detecta la versión de Ubuntu.  
+     `$(lsb_release -cs)`: Detecta la versión de Ubuntu.
+  
     4. Actualizar los paquetes:
      ```bash
          sudo apt update
