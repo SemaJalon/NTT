@@ -187,10 +187,10 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
     1. Instalar plugin de GitHub:
         1. Administrar Jenkins -> Plugins -> Available plugins -> Buscar Git
     2. Creamos una nueva tarea y seleccionamos “Pipeline” e indicamos un nombre para la tarea:
-       ![Prueba Jenkins 1](Jenkins1.png)
+       ![Prueba Jenkins 1](img/Jenkins1.png)
     3. En la opción de Pipeline seleccionamos Git, introducimos la url del repositorio de GitHub y seleccionamos Add en la parte de Credentials para añadir las credenciales de GitHub  
-       ![Prueba Jenkins 2](Jenkins2.png)  
-       ![Prueba Jenkins 3](Jenkins3.png)
+       ![Prueba Jenkins 2](img/Jenkins2.png)  
+       ![Prueba Jenkins 3](img/Jenkins3.png)
 3.	Conectar Jenkins con SonarQube
     1.	Instalamos el plugin de SonarQube Scanner en Jenkins:
         1.	Administrar Jenkins -> Plugins -> Availables plugins -> Buscamos SonarQube e instalamos SonarQube Scanner
@@ -198,19 +198,19 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         1.	Obtenemos un token de SonarQube:
             1.	Administration  System  Users  Apartado de Administrator creamos el token para Jenkins. 
             Copiamos el token que nos proporciona:
-      ![Token SonarQube](TokenSonarQube.png)
+      ![Token SonarQube](img/TokenSonarQube.png)
             2.	En Jenkins nos vamos a Administrar Jenkins -> System y nos desplazamos hasta la sección “SonarQube servers” y la configuramos indicando el nombre del servidor que hemos indicado en el archivo Jenkinsfile la url del servidor y añadimos las credenciales
-      ![Jenkins SonarQube](JenkinsSonarQube.png)
+      ![Jenkins SonarQube](img/JenkinsSonarQube.png)
                 1.	Clicamos en “+Add” para añadir el token que hemos obtenido de SonarQube:  
-                ![Credentials SonarQube](CredentialsSonarqube.png)  
+                ![Credentials SonarQube](img/CredentialsSonarqube.png)  
 4.	Una vez conectado Jenkins con GitHub para obtener el repositorio y Jenkins con SonarQube, accedemos al pipeline que hemos creado y clicamos en “Construir ahora”  
-     ![Construir Jenkins](JenkinsConstruir.png)  
+     ![Construir Jenkins](img/JenkinsConstruir.png)  
 5.	Por último, esperamos a que termine el análisis y veremos que se ha analizado con SonarQube.
       Lo podremos ver tanto en la página de SonarQube como en la de Jenkins:  
       SonarQube:  
-      ![Prueba SonarQube 2](Sonarqube2.png)  
+      ![Prueba SonarQube 2](img/Sonarqube2.png)  
     	Jenkins:  
-    	![Prueba Jenkins Status](JenkinsStatus.png)  
+    	![Prueba Jenkins Status](img/JenkinsStatus.png)  
 
 ## Analisis de SonarQube con un pipeline de Jenkins/Gitlab
 1.	Creamos una instancia de GitLab Community Edition en docker
@@ -271,8 +271,8 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
           ```
     2.	Creamos la pipeline en Jenkins y la conectamos con GitLab:
         1.	Añadimos las nuevas credentials para esta conexión con el nombre de usuario (root) y la contraseña que hemos obtenido anteriormente.  
-            ![Credenciales Gitlab](CredentialsGitlab.png)  
-            ![Credenciales Gitlab 2](CredentialsGitlab2.png)
+            ![Credenciales Gitlab](img/CredentialsGitlab.png)  
+            ![Credenciales Gitlab 2](img/CredentialsGitlab2.png)
     3.	En el archivo Jenkinsfile modificamos también las url y el nombre de credentialsId con el nombre que le hemos puesto a las credentials al crear la pipeline en Jenkins:
           ```
           pipeline {
@@ -326,8 +326,8 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
           }
           ```
     4.	A continuación, le damos a “Contruir ahora” y esperamos a que se contruya y Pasen los test:
-    ![SonarQube Gitlab](SonarQube-Gitlab.png)  
-    ![SonarQube Gitlab 2](SonarQube-Gitlab2.png)  
+    ![SonarQube Gitlab](img/SonarQube-Gitlab.png)  
+    ![SonarQube Gitlab 2](img/SonarQube-Gitlab2.png)  
 
 ## Instalar Kubernetes
 1.	Intalar kubernetes con microk8s
@@ -353,7 +353,7 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         sudo microk8s dashboard-proxy
     ```
     5.	Copiamos el token que nos proporciona y lo pegamos aquí:
-    ![Kubernetes](Kubernetes.png)  
+    ![Kubernetes](img/Kubernetes.png)  
 
 ## Instalar instancia de Gitlab en Kubernetes con manifiestos
 1.	Creamos los manifiestos:
@@ -487,23 +487,23 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
       ```
       
 2.	Una vez creado todos los archivos los aplicamos:
-![Gitlab Apply 1](GitlabApply1.png)  
-![Gitlab Apply 2](GitlabApply2.png)  
+![Gitlab Apply 1](img/GitlabApply1.png)  
+![Gitlab Apply 2](img/GitlabApply2.png)  
 3.	Una vez iniciado el servicio nos aparecerá en Kubernetes así:
-![Kubernetes Gitlab](KubernetesGitlab.png)  
+![Kubernetes Gitlab](img/KubernetesGitlab.png)  
 4.	Despues nos vamos al archivo hosts de Windows para añadir el host de gitlab.local, para que lo podamos abrir desde el navegador de Windows:
     1.  Obtenemos la ip de wsl. En la consola de Windows ejecutamos lo siguiente
-  ![WSL Hostname](WSL-Hostname.png)  
+  ![WSL Hostname](img/WSL-Hostname.png)  
     2.  Nos vamos a C:\Windows\System32\drivers\etc:
-  ![WSL Hosts](WSL-Hosts.png)  
+  ![WSL Hosts](img/WSL-Hosts.png)  
 5.	Ahora nos vamos al navegador de Windows (Microsoft Edge o el que tengais)
-![Web Gitlab](WebGitlab.png)  
+![Web Gitlab](img/WebGitlab.png)  
 6.	El usuario es root y para obtener la contraseña ejecutaremos los siguientes comandos en wsl:
     1.	Obtener el nombre del pod en ejecución
     2.	Nos muestra la contraseña
-    ![Password Gitlab](PassGitlab.png)  
+    ![Password Gitlab](img/PassGitlab.png)  
 7.	Y ya tendremos Gitlab montado en Kubernetes y listo para importar o realizar cualquier tarea necesaria:
-    ![Gitlab Projects](GitlabProjects.png)  
+    ![Gitlab Projects](img/GitlabProjects.png)  
 
 ## Instalar instancia de HelloWorld en Kubernetes
 1.	Creamos los manifiestos:
@@ -622,8 +622,8 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
                             number: 80
       ```
 2.	Una vez creado todos los archivos los aplicamos:
-![HelloWorld Apply](HwApply.png)  
+![HelloWorld Apply](img/HwApply.png)  
 3.	En el archivo C:\Windows\System32\drivers\etc\hosts añadimos el dominio helloworld.local:
-![HelloWorld Hosts](HwHosts.png)  
+![HelloWorld Hosts](img/HwHosts.png)  
 4.	Una vez este activo el contenedor y el pod, accedemos a la url http://helloworld.local
-![Web HelloWorld](WebHw.png)  
+![Web HelloWorld](img/WebHw.png)  
