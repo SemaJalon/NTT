@@ -326,5 +326,181 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
           }
           ```
     4.	A continuación, le damos a “Contruir ahora” y esperamos a que se contruya y Pasen los test:
-    ![SonarQube Gitlab](SonarQube-Gitlab.png)
-    ![SonarQube Gitlab 2](SonarQube-Gitlab2.png)    
+    ![SonarQube Gitlab](SonarQube-Gitlab.png)  
+    ![SonarQube Gitlab 2](SonarQube-Gitlab2.png)  
+
+## Instalar Kubernetes
+1.	Intalar kubernetes con microk8s
+    ```bash
+        sudo snap install microk8s -–classic
+    ```
+    1.	Iniciamos el servicio
+    ```bash
+        sudo microk8s status -–wait-ready
+    ```
+    2.	Comprovamos que nodo esté usando el kernel WSL2:
+    ```bash
+        sudo microk8s kubectl get node -o wide
+    ```
+    3.	Habilitamos los add-ons de DNS, Storage y Dashboard
+    ```bash
+        sudo microk8s enable dns
+        sudo microk8s enable hostpath-storage
+        sudo microk8s enable dashboard
+    ```
+    4.	Para acceder al dashboard, necesitamos el token y la dirección url:puerto, lo obtendremos con el siguiente comando:
+    ```bash
+        sudo microk8s dashboard-proxy
+    ```
+    5.	Copiamos el token que nos proporciona y lo pegamos aquí:
+    ![Kubernetes](Kubernetes.png)  
+
+## Instalar instancia de Gitlab en Kubernetes con manifiestos
+1.	Creamos los manifiestos:
+    1. Volumen permanente (gitlab-pcv.yaml)
+      ```bash
+          # Version de la API
+          apiVersion: v1
+          # Tipo de recurso que se define
+          kind: PersistentVolumeClaim
+          # Metadatos del recurso, en este caso el nombre
+          metadata:
+            name: gitlab-pvc
+          
+          spec:
+            # El volumen sera montado en modo Lectura/Escritura
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                # El tamaño del volumen sera de 10GiB
+                storage: 10Gi
+      ```
+    2. Deployment (gitlab-deployment.yaml)
+      ```bash
+          # Version de la API
+          apiVersion: apps/v1
+          #Tipo de recurso que se define
+          kind: Deployment
+          # Metadatos del recurso, en este caso el nombre
+          metadata:
+            name: gitlab
+          
+          spec:
+            # Cantidad de Pods que se desea ejecutar
+            replicas: 1
+            # Selector para identificar los Pods de este Deployment
+            selector:
+              matchLabels:
+                app: gitlab
+            # Plantilla que define las etiquetas que se le asignaran a los Pods de este Deployment
+            template:
+              metadata:
+                labels:
+                  app: gitlab
+          
+              spec:
+                # Contenedores dentro del Pod
+                containers:
+                  - name: gitlab
+                    # Imagen del contenedor obtenido desde Docker Hub
+                    image: docker.io/gitlab/gitlab-ce:latest
+                    # Puertos expuestos por el contenedor
+                    ports:
+                      - containerPort: 80
+                      - containerPort: 443
+                      - containerPort: 22
+                    # Montaje del volumen persistente en el contenedor
+                    volumeMounts:
+                      - name: gitlab-storage
+                        mountPath: /var/opt/gitlab
+                # Volumenes para el Pod
+                volumes:
+                  - name: gitlab-storage
+                    persistentVolumeClaim:
+                      claimName: gitlab-pvc # PVC que se usara para la persistencia
+      ```
+    3. Servicio (gitlab-service.yaml)
+      ```bash
+          # Version de la API
+          apiVersion: v1
+          # Tipo de recurso, en este caso un servicio para los pods
+          kind: Service
+          # Metadatos del recurso, en este caso el nombre
+          metadata:
+            name: gitlab-service
+          spec:
+            # Tipo del servicio, NodePort expone el servicio en cada nodo del cluster en un puerto
+            type: NodePort
+            # Selector que indica qué Pods serán expuestos
+            selector:
+              app: gitlab
+            # Puertos que se expondran dependiendo del protocolo
+            ports:
+              - name: http
+                port: 80
+                targetPort: 80
+                nodePort: 30080
+              - name: https
+                port: 443
+                targetPort: 443
+                nodePort: 30443
+              - name: ssh
+                port: 22
+                targetPort: 22
+                nodePort: 30022
+      ```
+    4. Ingress (gitlab-ingress.yaml)
+      ```bash
+          # Version de la API
+          apiVersion: networking.k8s.io/v1
+          # Tipo del recurso, en este caso un Ingress (Acceso HTTP/S externo a los servicios del cluster)
+          kind: Ingress
+          # Metadatos del recurso, como el nombre y anotaciones del certificado a usar
+          metadata:
+            name: gitlab-ingress
+            #annotations:
+              #cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          spec:
+            # Controlador de Ingress que usara, en este caso nginx
+            ingressClassName: nginx
+            # Configuracion de TLS para habilitar el HTTPS, la url sera http://gitlab.local
+            # tls:
+            #   - hosts:
+            #       - gitlab.local
+            #     secretName: gitlab-tls
+            # Reglas de enrutamiento
+            rules:
+              # El host que resolvera para acceder al servicio
+              - host: gitlab.local
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          # Nombre del Servicio al que se redirige el trafico
+                          name: gitlab-service
+                          port:
+                            # Puerto del servicio (HTTP)
+                            number: 80
+      ```
+      
+2.	Una vez creado todos los archivos los aplicamos:
+![Gitlab Apply 1](GitlabApply1.png)  
+![Gitlab Apply 2](GitlabApply2.png)  
+3.	Una vez iniciado el servicio nos aparecerá en Kubernetes así:
+![Kubernetes Gitlab](KubernetesGitlab.png)  
+4.	Despues nos vamos al archivo hosts de Windows para añadir el host de gitlab.local, para que lo podamos abrir desde el navegador de Windows:
+    1.  Obtenemos la ip de wsl. En la consola de Windows ejecutamos lo siguiente
+  ![WSL Hostname](WSL-Hostname.png)  
+    2.  Nos vamos a C:\Windows\System32\drivers\etc:
+  ![WSL Hosts](WSL-Hosts.png)  
+5.	Ahora nos vamos al navegador de Windows (Microsoft Edge o el que tengais)
+![Web Gitlab](WebGitlab.png)  
+6.	El usuario es root y para obtener la contraseña ejecutaremos los siguientes comandos en wsl:
+    1.	Obtener el nombre del pod en ejecución
+    2.	Nos muestra la contraseña
+    ![Password Gitlab](PassGitlab.png)  
+7.	Y ya tendremos Gitlab montado en Kubernetes y listo para importar o realizar cualquier tarea necesaria:
+    ![Gitlab Projects](GitlabProjects.png)  
