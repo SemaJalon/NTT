@@ -504,3 +504,126 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
     ![Password Gitlab](PassGitlab.png)  
 7.	Y ya tendremos Gitlab montado en Kubernetes y listo para importar o realizar cualquier tarea necesaria:
     ![Gitlab Projects](GitlabProjects.png)  
+
+## Instalar instancia de HelloWorld en Kubernetes
+1.	Creamos los manifiestos:
+    1.	Volumen permanente (hw-pcv.yaml) (Opcional)
+      ```bash
+          # Version de la API
+          apiVersion: v1
+          # Tipo de recurso que se define
+          kind: PersistentVolumeClaim
+          # Metadatos del recurso, en este caso el nombre
+          metadata:
+            name: helloworld-pvc
+          
+          spec:
+            # El volumen sera montado en modo Lectura/Escritura
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                # El tamaño del volumen sera de 10GiB
+                storage: 10G
+      ```
+    2.	Deployment (hw-deployment.yaml)
+      ```bash
+          # Version de la API
+          apiVersion: apps/v1
+          #Tipo de recurso que se define
+          kind: Deployment
+          # Metadatos del recurso, en este caso el nombre
+          metadata:
+            name: helloworld
+          
+          spec:
+            # Cantidad de Pods que se desea ejecutar
+            replicas: 1
+            # Selector para identificar los Pods de este Deployment
+            selector:
+              matchLabels:
+                app: helloworld
+            # Plantilla que define las etiquetas que se le asignaran a los Pods de este Deployment
+            template:
+              metadata:
+                labels:
+                  app: helloworld
+          
+              spec:
+                # Contenedores dentro del Pod
+                containers:
+                  - name: helloworld
+                    # Imagen del contenedor obtenido desde Docker Hub
+                    image: docker.io/jjalongu/helloworld:v2
+                    # Ejecutar la aplicacion para que se pueda acceder
+                    command:
+                      - python3
+                      - /app/src/app.py
+                    # Puertos expuestos por el contenedor
+                    ports:
+                      - containerPort: 80
+                    # Montaje del volumen persistente en el contenedor
+                    volumeMounts:
+                      - name: helloworld-storage
+                        mountPath: /var/opt/helloworld
+                # Volumenes para el Pod
+                volumes:
+                  - name: helloworld-storage
+                    persistentVolumeClaim:
+                      claimName: helloworld-pvc # PVC que se usara para la persistencia
+      ```
+    3.	Servicio (hw-service.yaml)
+      ```bash
+          # Version de la API
+          apiVersion: v1
+          # Tipo de recurso, en este caso un servicio para los pods
+          kind: Service
+          # Metadatos del recurso, en este caso el nombre
+          metadata:
+            name: helloworld-service
+          spec:
+            # Tipo del servicio, NodePort expone el servicio en cada nodo del cluster en un puerto
+            type: NodePort
+            # Selector que indica qué Pods serán expuestos
+            selector:
+              app: helloworld
+            # Puertos que se expondran dependiendo del protocolo
+            ports:
+              - name: http
+                port: 80
+                targetPort: 80
+      ```
+    4.	Ingress (hw-ingress.yaml)
+      ```bash
+          # Version de la API
+          apiVersion: networking.k8s.io/v1
+          # Tipo del recurso, en este caso un Ingress (Acceso HTTP/S externo a los servicios del cluster)
+          kind: Ingress
+          # Metadatos del recurso, como el nombre y anotaciones del certificado a usar
+          metadata:
+            name: helloworld-ingress
+          
+          spec:
+            # Controlador de Ingress que usara, en este caso nginx
+            ingressClassName: nginx
+            rules:
+              # El host que resolvera para acceder al servicio
+              - host: helloworld.local
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          # Nombre del Servicio al que se redirige el trafico
+                          name: helloworld-service
+                          port:
+                            # Puerto del servicio (HTTP)
+                            number: 80
+      ```
+2.	Una vez creado todos los archivos los aplicamos:
+![HelloWorld Apply](HwApply.png)  
+3.	En el archivo C:\Windows\System32\drivers\etc\hosts añadimos el dominio helloworld.local:
+![HelloWorld Hosts](HwHosts.png)  
+4.	Una vez este activo el contenedor y el pod, accedemos a la url http://helloworld.local
+![Web HelloWorld](WebHw.png)  
