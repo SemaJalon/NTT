@@ -126,7 +126,7 @@
     `-Dsonar.token`: Token que hemos creado en SonarQube para que `pysonar` pueda acceder al directorio y pueda realizar los tests
    
 Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pruebas unitarias realizadas con PySonar:
-![Prueba SonarQube 1](Sonarqube1.png)
+![Prueba SonarQube 1](img/Sonarqube1.png)
 
 ## Practica Python con Jenkins y SonarQube
 #### Subir proyecto a repositorio de GitHub
