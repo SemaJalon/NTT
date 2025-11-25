@@ -203,11 +203,128 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
       ![Jenkins SonarQube](JenkinsSonarQube.png)
                 1.	Clicamos en “+Add” para añadir el token que hemos obtenido de SonarQube:  
                 ![Credentials SonarQube](CredentialsSonarqube.png)  
-  4.	Una vez conectado Jenkins con GitHub para obtener el repositorio y Jenkins con SonarQube, accedemos al pipeline que hemos creado y clicamos en “Construir ahora”
+4.	Una vez conectado Jenkins con GitHub para obtener el repositorio y Jenkins con SonarQube, accedemos al pipeline que hemos creado y clicamos en “Construir ahora”  
      ![Construir Jenkins](JenkinsConstruir.png)  
-  5.	Por último, esperamos a que termine el análisis y veremos que se ha analizado con SonarQube.
+5.	Por último, esperamos a que termine el análisis y veremos que se ha analizado con SonarQube.
       Lo podremos ver tanto en la página de SonarQube como en la de Jenkins:  
       SonarQube:  
       ![Prueba SonarQube 2](Sonarqube2.png)  
     	Jenkins:  
     	![Prueba Jenkins Status](JenkinsStatus.png)  
+
+## Analisis de SonarQube con un pipeline de Jenkins/Gitlab
+1.	Creamos una instancia de GitLab Community Edition en docker
+    ```bash
+        docker pull gitlab/gitlab-ce:nightly
+        docker run -p 8929:8929 -p 2424:22 -- name gitlab gitlab/gitlab-ce:nightly
+    ```
+2.	Entramos en la consola del contenedor de Gitlab y configuramos la url de acceso a la web y el puerto:
+    ```bash
+        docker exec -it -u root gitlab /bin/bash
+        nano /etc/gitlab/gitlab.rb
+    ```
+    1.	Buscamos la línea external_url y la cambiamos por la siguiente línea:
+  	```bash
+        external_url http://localhost:8929
+    ```
+    2.	En el mismo archivo configuramos el puerto del ssh:
+  	```bash
+        gitlab_rails['gitlab_shell_ssh_port'] = 2424
+    ```
+    3.	Guardamos el archive y ejecutamos el siguiente comando para que se configure los cambios:
+      	```bash
+            gitlab-ctl reconfigure
+        ```
+        1.	Obtener la contraseña del usuario root:
+  	```bash
+        docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
+    ```
+    4.	Una vez terminado la configuración en el navegador entramos en gitlab:  
+        http://localhost:8929
+3.	Subimos el proyecto a GitLab:
+    1.	Ir al directorio local del proyecto
+          ```bash
+              cd helloworld
+          ````
+        1.	Inicializar Git:
+          ```bash
+              git init
+          ```
+        2.	Agregar los archivos:
+          ```bash
+              git add .
+          ```
+        3.	Realizar el primer commit
+          ```bash
+              git commit -m “subida de proyecto”
+          ```
+        4.	Conectar el repositorio local con el de GitLab
+          ```bash
+              git remote add origin http://gitlab:8929/root/sonarqube-helloworld.git
+          ```
+        5.	Nos pediran el nombre de usuario y la contraseña del usuario para confirmar la subida
+            1.	Indicamos que el usuario es root y la contraseña que hemos obtenido anteriormente
+        6.	Subir los archivos al repositorio de GitHub:
+          ```bash
+              git Branch -M main
+              git push -u origin main
+          ```
+    2.	Creamos la pipeline en Jenkins y la conectamos con GitLab:
+        1.	Añadimos las nuevas credentials para esta conexión con el nombre de usuario (root) y la contraseña que hemos obtenido anteriormente.
+            ![Credenciales Gitlab](CredentialsGitlab.png)  
+            ![Credenciales Gitlab 2](CredentialsGitlab2.png)
+    3.	En el archivo Jenkinsfile modificamos también las url y el nombre de credentialsId con el nombre que le hemos puesto a las credentials al crear la pipeline en Jenkins:
+          ```
+          pipeline {
+              agent any
+          
+              environment {
+                  SONARQUBE = 'sonarqube'   // nombre configurado en Jenkins -> System -> SonarQube servers
+                  PYTHON_ENV = 'venv'
+              }
+          
+              stages {
+                  stage('Checkout') {
+                      steps {
+                          git branch: 'main',
+                              url: 'https://github.com/SemaJalon/HelloWorld.git',
+                              credentialsId: 'github-token'
+                      }
+                  }
+          
+          
+                  stage('Setup Python Environment') {
+                      steps {
+                          sh '''
+                              python3 -m venv venv
+          
+          
+                          '''
+                      }
+                  }
+          
+          
+                  stage('Run Tests') {
+                      steps {
+                          sh '''
+                              python3 -m venv venv
+                              . venv/bin/activate
+                              /venv/bin/pysonar -Dsonar.host.url=http://sonarqube:9000 -Dsonar.sources=src -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.projectKey=HelloWorld -Dsonar.token=sqp_42be3b0fa7dd669b1fd8e33a51fbc71fa2526fa2
+                          '''
+                      }
+                  }
+              }
+          
+              post {
+                  success {
+                      echo '✅ Pipeline completado correctamente.'
+                  }
+                  failure {
+                      echo '❌ El pipeline ha fallado. Revisa las etapas anteriores.'
+                  }
+              }
+          }
+          ```
+    4.	A continuación, le damos a “Contruir ahora” y esperamos a que se contruya y Pasen los test:
+    ![SonarQube Gitlab](SonarQube-Gitlab.png)
+    ![SonarQube Gitlab 2](SonarQube-Gitlab2.png)    
