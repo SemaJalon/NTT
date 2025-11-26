@@ -79,7 +79,7 @@
      ```bash
         docker build -t helloworld .
      ```
-     `-t`: Construye una imagen con la etiqueta (tag) 'helloworld'
+     `-t`: Construye una imagen con la etiqueta (tag) 'helloworld'  
      `.`:  Contruir la imagen con los archivos del directorio actual  
     3. Correr la imagen para crear un contenedor con la imagen creada:
      ```bash
@@ -130,7 +130,7 @@
         python3  -m  venv venv
         source venv/bin/activate
     ```
-    `venv`: Entorno virtual de python
+    `venv`: Entorno virtual de python  
     5.	Instalamos pysonar-scanner
     ```bash
         pip3 install pysonar-scanner
@@ -147,7 +147,7 @@
     `-Dsonar.source`: Directorio donde se encuentran los archivos del proyecto  
     `-Dsonar.python.coverage.reportPaths`: Nombre del archivo de coverage que hemos realizado anteriormente  
     `-Dsonar.proyectKey`: Nombre de referencia del proyecto que se creara en SonarQube para los tests unitarios  
-    `-Dsonar.token`: Token que hemos creado en SonarQube para que `pysonar` pueda acceder al directorio y pueda realizar los tests
+    `-Dsonar.token`: Token que hemos creado en SonarQube para que `pysonar` pueda acceder al directorio y pueda realizar los tests  
    
 Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pruebas unitarias realizadas con PySonar:
 ![Prueba SonarQube 1](img/Sonarqube1.png)
@@ -189,7 +189,7 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         ```bash
           git commit -m “subida de proyecto”
         ```
-        `commit`: Guarda los cambios en el historial del repositorio
+        `commit`: Guarda los cambios en el historial del repositorio  
       	`-m "mensaje"`: Añade un mensaje descriptivo a los cambios  
         5.	Conectar el repositorio local con el de GitHub
         ```bash
@@ -213,9 +213,9 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
             git Branch -M main
             git push -u origin main
         ```
-        `branch -M main`: Renombra la rama actual a main.
-      	`push`: Envía los commits locales al repositorio remoto.
-      	`-u`: Establece la rama main como rama por defecto.
+        `branch -M main`: Renombra la rama actual a main.  
+      	`push`: Envía los commits locales al repositorio remoto.  
+      	`-u`: Establece la rama main como rama por defecto.  
       	`origin main`: Indica que se suba a la rama main del remoto llamado origin.  
 #### Análisis de SonarQube con un pipeline de Jenkins
 1. En el directorio raíz del proyecto de GitHub creamos un archivo Jenkinsfile para configurar el pipeline y los comandos necesarios para realizar las pruebas mediante pysonar. (En caso de necesitar el archivo Jenkinsfile, póngase en contacto con el autor del documento).
@@ -254,9 +254,9 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         docker pull gitlab/gitlab-ce:nightly
         docker run -p 8929:8929 -p 2424:22 --name gitlab gitlab/gitlab-ce:nightly
     ```
-    `pull`: Crear una imagen desde el repositorio de Docker hub.
+    `pull`: Crear una imagen desde el repositorio de Docker hub.  
   	`run`: Crear contenedor  
-  	`-p`: Puerto externo
+  	`-p`: Puerto externo  
   	`-p`: Puerto interno  
   	`name`: Nombre del contenedor  
 3.	Entramos en la consola del contenedor de Gitlab y configuramos la url de acceso a la web y el puerto:
