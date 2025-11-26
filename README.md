@@ -202,7 +202,7 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         1.	Administrar Jenkins -> Plugins -> Availables plugins -> Buscamos SonarQube e instalamos SonarQube Scanner
     2.	Configurar plugin SonarQube:
         1.	Obtenemos un token de SonarQube:
-            1.	Administration  System  Users  Apartado de Administrator creamos el token para Jenkins. 
+            1.	Administration -> System -> Users -> Apartado de Administrator creamos el token para Jenkins. 
             Copiamos el token que nos proporciona:
       ![Token SonarQube](img/TokenSonarQube.png)
             2.	En Jenkins nos vamos a Administrar Jenkins -> System y nos desplazamos hasta la sección “SonarQube servers” y la configuramos indicando el nombre del servidor que hemos indicado en el archivo Jenkinsfile la url del servidor y añadimos las credenciales
@@ -222,9 +222,14 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
 1.	Creamos una instancia de GitLab Community Edition en docker
     ```bash
         docker pull gitlab/gitlab-ce:nightly
-        docker run -p 8929:8929 -p 2424:22 -- name gitlab gitlab/gitlab-ce:nightly
+        docker run -p 8929:8929 -p 2424:22 --name gitlab gitlab/gitlab-ce:nightly
     ```
-2.	Entramos en la consola del contenedor de Gitlab y configuramos la url de acceso a la web y el puerto:
+    `pull`: Crear una imagen desde el repositorio de Docker hub.
+  	`run`: Crear contenedor  
+  	`-p`: Puerto externo
+  	`-p`: Puerto interno  
+  	`name`: Nombre del contenedor  
+3.	Entramos en la consola del contenedor de Gitlab y configuramos la url de acceso a la web y el puerto:
     ```bash
         docker exec -it -u root gitlab /bin/bash
         nano /etc/gitlab/gitlab.rb
@@ -247,7 +252,7 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
     ```
     4.	Una vez terminado la configuración en el navegador entramos en gitlab:  
         http://localhost:8929
-3.	Subimos el proyecto a GitLab:
+4.	Subimos el proyecto a GitLab:
     1.	Ir al directorio local del proyecto
           ```bash
               cd helloworld
@@ -353,6 +358,9 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         sudo microk8s enable dns
         sudo microk8s enable hostpath-storage
         sudo microk8s enable dashboard
+        sudo microk8s enable ingress
+        sudo microk8s enable community
+        sudo microk8s enable dashboard-ingress
     ```
     4.	Para acceder al dashboard, necesitamos el token y la dirección url:puerto, lo obtendremos con el siguiente comando:
     ```bash
@@ -500,7 +508,7 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
 4.	Despues nos vamos al archivo hosts de Windows para añadir el host de gitlab.local, para que lo podamos abrir desde el navegador de Windows:
     1.  Obtenemos la ip de wsl. En la consola de Windows ejecutamos lo siguiente
   ![WSL Hostname](img/WSL-Hostname.png)  
-    2.  Nos vamos a C:\Windows\System32\drivers\etc:
+    2.  Nos vamos a C:\Windows\System32\drivers\etc\hosts, para que podamos acceder a la instancia con solo el nombre indicado en el ingres.yaml y en el archivo hosts:
   ![WSL Hosts](img/WSL-Hosts.png)  
 5.	Ahora nos vamos al navegador de Windows (Microsoft Edge o el que tengais)
 ![Web Gitlab](img/WebGitlab.png)  
