@@ -75,18 +75,21 @@
      ```
 3. Crear contenedor del proyecto HelloWorld
     1. Crear Dockerfile en el directorio del proyecto (HelloWorld)
-    2. Crear imagen del proyecto (Construye una imagen con nombre 'helloworld' y contruira la imagen con los archivos del directorio actual).  
+    2. Crear imagen del proyecto.  
      ```bash
         docker build -t helloworld .
      ```
-     
+     `-t`: Construye una imagen con la etiqueta (tag) 'helloworld'
+     `.`:  Contruir la imagen con los archivos del directorio actual  
     3. Correr la imagen para crear un contenedor con la imagen creada:
      ```bash
         docker run -d -p 7000:4000 helloworld
      ```
+     `-d`: Ejecuta el contenedor en segundo plano  
+     `-p`: Levanta un puerto del contenedor  
     4. Acceder al contenedor mediante el navegador:
         http://localhost:7000
-4.	Realizar pruebas unitarias para el proyecto:
+5.	Realizar pruebas unitarias para el proyecto:
     1.	Instalar coverage de python3 dentro del contenedor del proyecto
     ```bash
       docker exec -it <nombre_contenedor> sh
@@ -111,7 +114,7 @@
     ```bash
        coverage xml
     ```
-5. Realizar pruebas unitarias en SonarQube
+6. Realizar pruebas unitarias en SonarQube
     1.	Instalar SonarQube en un contenedor de Docker
     ```bash
         docker run --name sonarqube -p 9001:9000 sonarqube
@@ -127,6 +130,7 @@
         python3  -m  venv venv
         source venv/bin/activate
     ```
+    `venv`: Entorno virtual de python
     5.	Instalamos pysonar-scanner
     ```bash
         pip3 install pysonar-scanner
@@ -159,6 +163,9 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
       git config --global user.name "SemaJalon"
       git config --global user.email "j.jalon.guerrero@iescristobaldemonroy.es"
     ```
+    `git config`: Configurar opciones de Git  
+  	`--global`: Aplicar la configuracion a nuvel global  
+  	`user.name`,`user.email`: Define el nombre y el correo de la cuenta de usuario  
     2.	Crear repositorio en Github
         1.	Ir a GitHub.
         2.	Crear nuevo “New”
@@ -169,7 +176,7 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         ```bash
           cd helloworld
         ```
-        2.	Inicializar Git:
+        2.	Inicializar Git (Crea un directorio .git donde se guardará toda la informacion del control de versiones):
         ```bash
           git init
         ```
@@ -177,14 +184,18 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         ```bash
           git add .
         ```
+        `add .`: añade todos los archivos del directorio actual  
         4.	Realizar el primer commit
         ```bash
           git commit -m “subida de proyecto”
         ```
+        `commit`: Guarda los cambios en el historial del repositorio
+      	`-m "mensaje"`: Añade un mensaje descriptivo a los cambios  
         5.	Conectar el repositorio local con el de GitHub
         ```bash
             git remote add origin https://github.com/SemaJalon/HelloWorld.git
         ```
+        `remote add origin`: Crea un alias llamado origin que apunta al repositorio remoto  
         6.	Nos pediran el nombre de usuario y un token para confirmar la subida
           1.	Obtener token:
               Ire a GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token.  
@@ -196,11 +207,16 @@ Una vez realizado, en SonarQube nos aparecerá los siguientes valores de las pru
         ```bash
             git config ––global credential.helper store
         ```
+        `credential.helper store`: Configura Git para guardar las credenciales en texto plano en tu máquina.  
         7.	Subir los archivos al repositorio de GitHub:
         ```bash
             git Branch -M main
             git push -u origin main
         ```
+        `branch -M main`: Renombra la rama actual a main.
+      	`push`: Envía los commits locales al repositorio remoto.
+      	`-u`: Establece la rama main como rama por defecto.
+      	`origin main`: Indica que se suba a la rama main del remoto llamado origin.  
 #### Análisis de SonarQube con un pipeline de Jenkins
 1. En el directorio raíz del proyecto de GitHub creamos un archivo Jenkinsfile para configurar el pipeline y los comandos necesarios para realizar las pruebas mediante pysonar. (En caso de necesitar el archivo Jenkinsfile, póngase en contacto con el autor del documento).
 2. Conectar Jenkins con el repositorio de GitHub:
