@@ -80,7 +80,25 @@
         docker build -t helloworld .
      ```
      `-t`: Construye una imagen con la etiqueta (tag) 'helloworld'  
-     `.`:  Contruir la imagen con los archivos del directorio actual  
+     `.`:  Contruir la imagen con los archivos del directorio actual
+       1. Docker leerá el archivo Dockerfile y creara la imagen siguiendo las instrucciones:
+       ```
+        # Usa Ubuntu 22.04 como sistema operativo base para el entorno inicial de la imagen.
+        FROM ubuntu:22.04
+        # Actualiza el índice de paquetes para poder instalar software actualizado
+        RUN apt update
+        # Instala Python3, pip y la libreria coverage
+        RUN apt install -y python3 python3-pip
+        RUN pip3 install coverage
+        # Crea un directorio de trabajo en la raiz de la imagen
+        WORKDIR /app
+        # Copia los archivo al directorio de trabajo
+        COPY . /app
+        # Instala las dependencias del proyecto, --no-cache evita guardar archivos temporales
+        RUN pip3 --no-cache install -r requirements.txt
+        # Comando que se ejecutara cuando el contenedor arranque
+        CMD ["python3", "src/app.py"]
+       ```
     3. Correr la imagen para crear un contenedor con la imagen creada:
      ```bash
         docker run -d -p 7000:4000 helloworld
